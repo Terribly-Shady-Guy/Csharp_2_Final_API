@@ -24,3 +24,5 @@ that key in the input if and only if the key has showed up more than once in the
 List<Dictionary<string,string>> is to be returned. The first list item is to be the dictionary that contains
 the parsed input, and the second list item is to be the dictionary that contains the keys that showed up
 more than once, and the number of occurrences.
+
+Solution is handled on ProblemController.cs
