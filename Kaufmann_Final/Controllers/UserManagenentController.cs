@@ -11,10 +11,12 @@ namespace Kaufmann_Final.Controllers
     public class UserManagenentController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
+        private readonly AuthenticationManager _manager;
 
-        public UserManagenentController(Kaufmann_FinaldbContext context)
+        public UserManagenentController(Kaufmann_FinaldbContext context, AuthenticationManager manager)
         {
             _dbContext = context;
+            _manager = manager;
         }
 
         [HttpPost]
@@ -31,7 +33,26 @@ namespace Kaufmann_Final.Controllers
                 return Conflict();
             }
 
-            return Created("GetUsers", newUser.Username);
+            return Created("GetUsers", $"New account created as: {newUser.Username}");
         }
+
+        [HttpPost]
+        public ActionResult<string> Login(UserLogin user)
+        {
+            string token = _manager.AuthenticateUser(user.Username, user.Password);
+
+            if (token == "")
+            {
+                return Unauthorized();
+            }
+
+            return Ok(token);
+        }
+    }
+
+    public class UserLogin
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }
