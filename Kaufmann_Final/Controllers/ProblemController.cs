@@ -7,7 +7,7 @@ namespace Kaufmann_Final.Controllers
     [ApiController]
     public class ProblemController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost] //solution to problem solving portion
         public List<Dictionary<string, string>> AddToDictionaries(List<KeyValuePair<string, string>> keyValuePairs)
         {
             var keyValues = new Dictionary<string, string>(keyValuePairs.Count);
