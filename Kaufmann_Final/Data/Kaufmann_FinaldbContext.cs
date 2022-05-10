@@ -101,8 +101,7 @@ namespace Kaufmann_Final.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(30)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Role)
