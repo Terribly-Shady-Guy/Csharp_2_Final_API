@@ -19,6 +19,7 @@ namespace Kaufmann_Final.Controllers
             _manager = manager;
         }
 
+        [Route("/signup")]
         [HttpPost]
         public async Task<ActionResult> CreateUser(User newUser)
         {
@@ -36,10 +37,11 @@ namespace Kaufmann_Final.Controllers
             return Created("GetUsers", $"New account created as: {newUser.Username}");
         }
 
+        [Route("/login")]
         [HttpPost]
         public ActionResult<string> Login(UserLogin user)
         {
-            string token = _manager.AuthenticateUser(user.Username, user.Password);
+            string token = _manager.AuthenticateUser(user.Username, user.Password, _dbContext);
 
             if (token == "")
             {

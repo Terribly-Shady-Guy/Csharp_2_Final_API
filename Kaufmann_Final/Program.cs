@@ -14,8 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Configure JWT Authentecation.
-
-string key = "SuperSecretKey";
+string key = "SuperSecretKey123";
 
 builder.Services.AddAuthentication(option =>
 {
@@ -54,6 +53,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

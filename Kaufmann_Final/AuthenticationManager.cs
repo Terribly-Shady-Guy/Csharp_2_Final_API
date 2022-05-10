@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using Kaufmann_Final.Data;
 using Kaufmann_Final.Models;
 using System.Text;
@@ -10,21 +11,30 @@ namespace Kaufmann_Final
     public class AuthenticationManager
     {
         private readonly string _key;
-        private readonly Kaufmann_FinaldbContext _context;
 
-        public AuthenticationManager(string key, Kaufmann_FinaldbContext context)
+        public AuthenticationManager(string key)
         {
             _key = key;
-            _context = context;
         }
 
-        public string AuthenticateUser(string username, string password)
+        public string AuthenticateUser(string username, string password, Kaufmann_FinaldbContext context)
         {
-            var user = _context.Users.Where(u => u.Username == username)
-                .Select(u => new User())
-                .ToList();
+            List<User>? userList = context.Users.Where(u => u.Username == username)
+                                                .Select(u => u)
+                                                .ToList();
 
-            if (user[0].Password != password)
+            User? user = null;
+
+            foreach (var possibleUser in userList)
+            {
+                if (possibleUser.Password == password)
+                {
+                    user = possibleUser;
+                    break;
+                }
+            }
+
+            if (user == null)
             {
                 return "";
             }
@@ -36,7 +46,8 @@ namespace Kaufmann_Final
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(
