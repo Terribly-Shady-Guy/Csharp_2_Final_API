@@ -1,8 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using Kaufmann_Final.Data;
 using Kaufmann_Final.Models;
 using System.Text;
 
