@@ -3,7 +3,7 @@
 ## **Main API data access portion prompt:**
 
 Think of the first example as if you were working for the state of Minnesota, and
-you were tasked with creating a public facing API for the for the theoretical MinnState DMV Mobile App
+you were tasked with creating a public facing API for the theoretical MinnState DMV Mobile App
 to make calls to.
   1. DMV and law enforcement personnel should be able to look up drivers based on name, social
   security number, license plate number.
