@@ -9,8 +9,7 @@ namespace Kaufmann_Final.Models
     {
         public Vehicle()
         {
-            Infractions = new HashSet<Infraction>();
-            DriverLicenseNumbers = new HashSet<Driver>();
+            VehicleOwners = new HashSet<VehicleOwner>();
         }
 
         public string LicensePlate { get; set; }
@@ -18,8 +17,6 @@ namespace Kaufmann_Final.Models
         public string Make { get; set; }
         public string Year { get; set; }
 
-        public virtual ICollection<Infraction> Infractions { get; set; }
-
-        public virtual ICollection<Driver> DriverLicenseNumbers { get; set; }
+        public virtual ICollection<VehicleOwner> VehicleOwners { get; set; }
     }
 }

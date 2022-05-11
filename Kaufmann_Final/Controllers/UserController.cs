@@ -8,12 +8,12 @@ namespace Kaufmann_Final.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserManagenentController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
         private readonly AuthenticationManager _manager;
 
-        public UserManagenentController(Kaufmann_FinaldbContext context, AuthenticationManager manager)
+        public UserController(Kaufmann_FinaldbContext context, AuthenticationManager manager)
         {
             _dbContext = context;
             _manager = manager;

@@ -19,9 +19,7 @@ namespace Kaufmann_Final
 
         public string AuthenticateUser(string username, string password, Kaufmann_FinaldbContext context)
         {
-            List<User>? userList = context.Users.Where(u => u.Username == username)
-                                                .Select(u => u)
-                                                .ToList();
+            List<User>? userList = context.Users.Where(u => u.Username == username).ToList();
 
             User? user = null;
 

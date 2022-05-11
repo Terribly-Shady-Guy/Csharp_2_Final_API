@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Kaufmann_Final.Data;
 using Kaufmann_Final.Models;
@@ -21,39 +22,57 @@ namespace Kaufmann_Final.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Drivers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
+        [Route("/drivername")]
+        [Authorize(Roles = "Law Enforcement, DMV Staff")]
+        public ActionResult<List<Driver>> GetDriversByName(string firstName, string lastName)
         {
-            return await _context.Drivers.ToListAsync();
+            List<Driver> drivers = _context.Drivers.Where(d => d.FirstName == firstName && d.LastName == lastName).ToList();
+
+            if (drivers.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(drivers);
         }
 
-        // GET: api/Drivers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Driver>> GetDriver(string id)
+        [HttpGet]
+        [Route("/driverssn")]
+        [Authorize(Roles = "Law Enforcement, DMV Staff")]
+        public ActionResult<Driver> GetDriverBySSN(string ssn)
         {
-            var driver = await _context.Drivers.FindAsync(id);
+            Driver driver = _context.Drivers.Where(d => d.SocialSecurity == ssn).ToArray()[0];
 
             if (driver == null)
             {
                 return NotFound();
             }
 
-            return driver;
+            return Ok(driver);
         }
 
-        // PUT: api/Drivers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDriver(string id, Driver driver)
+        [HttpGet]
+        [Route("/driverlicenseplate")]
+        [Authorize(Roles = "Law Enforcement, DMV Staff")]
+        public ActionResult<List<Driver>> GetDriversByPlate(string licensePlate)
         {
-            if (id != driver.DriverLicenseNumber)
+            List<Driver> drivers = _context.Drivers.Where(d => d.VehicleOwners.Any(v => v.DriverLicenseNumber == licensePlate)).ToList();
+
+            if (drivers.Count == 0)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(driver).State = EntityState.Modified;
+            return Ok(drivers);
+        }
+
+        [HttpPost]
+        [Route("/newdriver")]
+        [Authorize(Roles = "DMV Staff")]
+        public async Task<ActionResult> AddNewDriver(Driver newDriver)
+        {
+            _context.Drivers.Add(newDriver);
 
             try
             {
@@ -61,63 +80,10 @@ namespace Kaufmann_Final.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DriverExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Conflict();
             }
 
-            return NoContent();
-        }
-
-        // POST: api/Drivers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Driver>> PostDriver(Driver driver)
-        {
-            _context.Drivers.Add(driver);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (DriverExists(driver.DriverLicenseNumber))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetDriver", new { id = driver.DriverLicenseNumber }, driver);
-        }
-
-        // DELETE: api/Drivers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDriver(string id)
-        {
-            var driver = await _context.Drivers.FindAsync(id);
-            if (driver == null)
-            {
-                return NotFound();
-            }
-
-            _context.Drivers.Remove(driver);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool DriverExists(string id)
-        {
-            return _context.Drivers.Any(e => e.DriverLicenseNumber == id);
+            return Created("getDriver", $"New driver {newDriver.FirstName} {newDriver.LastName} added");
         }
     }
 }

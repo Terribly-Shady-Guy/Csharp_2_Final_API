@@ -23,6 +23,7 @@ namespace Kaufmann_Final.Data
         public virtual DbSet<Infraction> Infractions { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }
+        public virtual DbSet<VehicleOwner> VehicleOwners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,32 +57,20 @@ namespace Kaufmann_Final.Data
             {
                 entity.Property(e => e.InfractionId).HasColumnName("InfractionID");
 
-                entity.Property(e => e.DriverLicenseNumber)
-                    .IsRequired()
-                    .HasMaxLength(13)
-                    .IsUnicode(false);
+                entity.Property(e => e.FineAmount).HasColumnType("decimal(8, 2)");
 
                 entity.Property(e => e.InfractionDate).HasColumnType("date");
-
-                entity.Property(e => e.LicensePlate)
-                    .IsRequired()
-                    .HasMaxLength(6)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Offence)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.DriverLicenseNumberNavigation)
-                    .WithMany(p => p.Infractions)
-                    .HasForeignKey(d => d.DriverLicenseNumber)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Infractions_Drivers");
+                entity.Property(e => e.VehicleOwnerId).HasColumnName("VehicleOwnerID");
 
-                entity.HasOne(d => d.LicensePlateNavigation)
+                entity.HasOne(d => d.VehicleOwner)
                     .WithMany(p => p.Infractions)
-                    .HasForeignKey(d => d.LicensePlate)
+                    .HasForeignKey(d => d.VehicleOwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Infractions_Vehicles");
             });
@@ -101,6 +90,7 @@ namespace Kaufmann_Final.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -137,23 +127,37 @@ namespace Kaufmann_Final.Data
                     .IsRequired()
                     .HasMaxLength(4)
                     .IsUnicode(false);
+            });
 
-                entity.HasMany(d => d.DriverLicenseNumbers)
-                    .WithMany(p => p.LicensePlates)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "VehicleOwner",
-                        l => l.HasOne<Driver>().WithMany().HasForeignKey("DriverLicenseNumber").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_VehicleOwner_Drivers"),
-                        r => r.HasOne<Vehicle>().WithMany().HasForeignKey("LicensePlate").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_VehicleOwner_Vehicles"),
-                        j =>
-                        {
-                            j.HasKey("LicensePlate", "DriverLicenseNumber");
+            modelBuilder.Entity<VehicleOwner>(entity =>
+            {
+                entity.ToTable("VehicleOwner");
 
-                            j.ToTable("VehicleOwner");
+                entity.Property(e => e.VehicleOwnerId).HasColumnName("VehicleOwnerID");
 
-                            j.IndexerProperty<string>("LicensePlate").HasMaxLength(6).IsUnicode(false);
+                entity.Property(e => e.DriverLicenseNumber)
+                    .IsRequired()
+                    .HasMaxLength(13)
+                    .IsUnicode(false);
 
-                            j.IndexerProperty<string>("DriverLicenseNumber").HasMaxLength(13).IsUnicode(false);
-                        });
+                entity.Property(e => e.LicensePlate)
+                    .IsRequired()
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TitleDateIssued).HasColumnType("date");
+
+                entity.HasOne(d => d.DriverLicenseNumberNavigation)
+                    .WithMany(p => p.VehicleOwners)
+                    .HasForeignKey(d => d.DriverLicenseNumber)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VehicleOwner_Drivers");
+
+                entity.HasOne(d => d.LicensePlateNavigation)
+                    .WithMany(p => p.VehicleOwners)
+                    .HasForeignKey(d => d.LicensePlate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VehicleOwner_Vehicles");
             });
 
             OnModelCreatingPartial(modelBuilder);
