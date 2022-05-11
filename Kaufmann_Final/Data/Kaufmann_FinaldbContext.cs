@@ -107,9 +107,9 @@ namespace Kaufmann_Final.Data
 
             modelBuilder.Entity<Vehicle>(entity =>
             {
-                entity.HasKey(e => e.LicensePlate);
+                entity.HasKey(e => e.LicensePlateNumber);
 
-                entity.Property(e => e.LicensePlate)
+                entity.Property(e => e.LicensePlateNumber)
                     .HasMaxLength(6)
                     .IsUnicode(false);
 
@@ -140,7 +140,7 @@ namespace Kaufmann_Final.Data
                     .HasMaxLength(13)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LicensePlate)
+                entity.Property(e => e.LicensePlateNumber)
                     .IsRequired()
                     .HasMaxLength(6)
                     .IsUnicode(false);
@@ -153,9 +153,9 @@ namespace Kaufmann_Final.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VehicleOwner_Drivers");
 
-                entity.HasOne(d => d.LicensePlateNavigation)
+                entity.HasOne(d => d.LicensePlateNumberNavigation)
                     .WithMany(p => p.VehicleOwners)
-                    .HasForeignKey(d => d.LicensePlate)
+                    .HasForeignKey(d => d.LicensePlateNumber)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VehicleOwner_Vehicles");
             });

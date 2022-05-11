@@ -13,12 +13,12 @@ namespace Kaufmann_Final.Models
         }
 
         public int VehicleOwnerId { get; set; }
-        public string LicensePlate { get; set; }
+        public string LicensePlateNumber { get; set; }
         public string DriverLicenseNumber { get; set; }
         public DateTime TitleDateIssued { get; set; }
 
         public virtual Driver DriverLicenseNumberNavigation { get; set; }
-        public virtual Vehicle LicensePlateNavigation { get; set; }
+        public virtual Vehicle LicensePlateNumberNavigation { get; set; }
         public virtual ICollection<Infraction> Infractions { get; set; }
     }
 }
