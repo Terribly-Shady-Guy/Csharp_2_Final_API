@@ -41,12 +41,25 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public ActionResult<string> Login(UserLogin user)
         {
-            string token = _manager.AuthenticateUser(user.Username, user.Password, _dbContext);
+            List<User> userList = _dbContext.Users.Where(u => u.Username == user.Username).ToList();
 
-            if (token == "")
+            User? userAccount = null;
+
+            foreach (var possibleUser in userList)
+            {
+                if (possibleUser.Password == user.Password)
+                {
+                    userAccount = possibleUser;
+                    break;
+                }
+            }
+
+            if (userAccount == null)
             {
                 return Unauthorized();
             }
+
+            string token = _manager.AuthenticateUser(userAccount);
 
             return Ok(token);
         }

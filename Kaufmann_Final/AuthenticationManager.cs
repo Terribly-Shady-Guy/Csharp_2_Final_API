@@ -17,26 +17,8 @@ namespace Kaufmann_Final
             _key = key;
         }
 
-        public string AuthenticateUser(string username, string password, Kaufmann_FinaldbContext context)
+        public string AuthenticateUser(User user)
         {
-            List<User>? userList = context.Users.Where(u => u.Username == username).ToList();
-
-            User? user = null;
-
-            foreach (var possibleUser in userList)
-            {
-                if (possibleUser.Password == password)
-                {
-                    user = possibleUser;
-                    break;
-                }
-            }
-
-            if (user == null)
-            {
-                return "";
-            }
-
             var jwtHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(_key);
 
@@ -44,7 +26,7 @@ namespace Kaufmann_Final
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
