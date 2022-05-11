@@ -1,9 +1,9 @@
-**Details of the project:**
+# **Details of the project:**
 
-**Main API data access portion prompt:**
+## **Main API data access portion prompt:**
 
 Think of the first example as if you were working for the state of Minnesota, and
-you were tasked with creating a public facing API for the for the theoretical MinnState DMV Mobile App
+you were tasked with creating a public facing API for the theoretical MinnState DMV Mobile App
 to make calls to.
   1. DMV and law enforcement personnel should be able to look up drivers based on name, social
   security number, license plate number.
@@ -12,7 +12,7 @@ to make calls to.
   4. Both DMV and law enforcement personnel must be authorized prior to making API calls that
   expose sensitive data.
 
-**Problem Solving Portion:**
+## **Problem Solving Portion:**
 
 The API is to have a route that solves the following problem:
 Given an input of type List<KeyValuePair<string, string>> with n elements, add the values into a
