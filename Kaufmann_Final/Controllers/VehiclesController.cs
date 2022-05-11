@@ -20,8 +20,29 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddNewVehicle(Vehicle newVehicle)
+        public async Task<ActionResult> AddNewVehicle(NewVehicleModel vehicle)
         {
+            List<VehicleOwner> newOwner = new List<VehicleOwner>(vehicle.DriverLicenseNumbers.Count);
+           
+            for (int i = 0; i < newOwner.Count; i++)
+            {
+                newOwner[i] = new VehicleOwner
+                {
+                    DriverLicenseNumber = vehicle.DriverLicenseNumbers[i],
+                    LicensePlateNumber = vehicle.LicensePlateNumber,
+                    TitleDateIssued = vehicle.TitleDateIssued
+                };
+            }
+
+            Vehicle newVehicle = new Vehicle
+            {
+                LicensePlateNumber = vehicle.LicensePlateNumber,
+                Model = vehicle.Model,
+                Make = vehicle.Make,
+                Year = vehicle.Year,
+                VehicleOwners = newOwner,
+            };
+
             _context.Vehicles.Add(newVehicle);
 
             try
@@ -35,5 +56,15 @@ namespace Kaufmann_Final.Controllers
 
             return Created("getVehicles", $"Vehicle successfully inserted as {newVehicle.LicensePlateNumber}");
         }
+    }
+
+    public class NewVehicleModel
+    {
+        public string LicensePlateNumber { get; set; }
+        public List<string> DriverLicenseNumbers { get; set; }
+        public string Model { get; set; }
+        public string Make { get; set; }
+        public string Year { get; set; }
+        public DateTime TitleDateIssued { get; set; }
     }
 }

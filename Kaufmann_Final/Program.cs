@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(option =>
 
 builder.Services.AddSingleton(new AuthenticationManager(key));
 
-//configure EF core to query db.
+//configure EF core to access SQL Server db.
 builder.Services.AddDbContext<Kaufmann_Final.Data.Kaufmann_FinaldbContext>(
     options =>
     {

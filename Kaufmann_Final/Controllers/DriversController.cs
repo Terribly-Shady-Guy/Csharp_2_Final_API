@@ -12,6 +12,7 @@ using Kaufmann_Final.Models;
 
 namespace Kaufmann_Final.Controllers
 {
+    [Authorize(Roles = "Law Enforcement, DMV Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class DriversController : ControllerBase
@@ -22,12 +23,28 @@ namespace Kaufmann_Final.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
-        [Route("/drivername")]
-        [Authorize(Roles = "Law Enforcement, DMV Staff")]
-        public ActionResult<List<Driver>> GetDriversByName(string firstName, string lastName)
+        public ActionResult<List<Driver>> GetDriver(string firstName = "", string lastName = "", string licensePlate = "", string ssn = "")
         {
-            List<Driver> drivers = _context.Drivers.Where(d => d.FirstName == firstName && d.LastName == lastName).ToList();
+            var drivers = new List<Driver>();
+
+            if (firstName != "" && lastName != "")
+            {
+                drivers = _context.Drivers.Where(d => d.FirstName == firstName && d.LastName == lastName).ToList();
+            }
+            else if (licensePlate != "")
+            {
+                drivers = _context.Drivers.Where(d => d.VehicleOwners.Any(vo => vo.LicensePlateNumber == licensePlate)).ToList();
+            }
+            else if (ssn != "")
+            {
+                drivers = _context.Drivers.Where(d => d.SocialSecurity == ssn).ToList();
+            }
+            else
+            {
+                return BadRequest();
+            }
 
             if (drivers.Count == 0)
             {
@@ -37,41 +54,19 @@ namespace Kaufmann_Final.Controllers
             return Ok(drivers);
         }
 
-        [HttpGet]
-        [Route("/driverssn")]
-        [Authorize(Roles = "Law Enforcement, DMV Staff")]
-        public ActionResult<Driver> GetDriverBySSN(string ssn)
-        {
-            Driver driver = _context.Drivers.Where(d => d.SocialSecurity == ssn).ToArray()[0];
-
-            if (driver == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(driver);
-        }
-
-        [HttpGet]
-        [Route("/driverlicenseplate")]
-        [Authorize(Roles = "Law Enforcement, DMV Staff")]
-        public ActionResult<List<Driver>> GetDriversByPlate(string licensePlate)
-        {
-            List<Driver> drivers = _context.Drivers.Where(d => d.VehicleOwners.Any(v => v.DriverLicenseNumber == licensePlate)).ToList();
-
-            if (drivers.Count == 0)
-            {
-                return NotFound();
-            }
-
-            return Ok(drivers);
-        }
-
-        [HttpPost]
-        [Route("/newdriver")]
         [Authorize(Roles = "DMV Staff")]
-        public async Task<ActionResult> AddNewDriver(Driver newDriver)
+        [HttpPost]
+        public async Task<ActionResult> AddNewDriver(NewDriver driver)
         {
+            Driver newDriver = new Driver
+            {
+                DriverLicenseNumber = driver.DriverLicenseNumber,
+                FirstName = driver.FirstName,
+                LastName = driver.LastName,
+                SocialSecurity = driver.SocialSecurity,
+                DateOfBirth = driver.DateOfBirth,
+            };
+
             _context.Drivers.Add(newDriver);
 
             try
@@ -85,5 +80,14 @@ namespace Kaufmann_Final.Controllers
 
             return Created("getDriver", $"New driver {newDriver.FirstName} {newDriver.LastName} added");
         }
+    }
+
+    public class NewDriver
+    {
+        public string DriverLicenseNumber { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string SocialSecurity { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }
