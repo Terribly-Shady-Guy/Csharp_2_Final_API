@@ -54,7 +54,7 @@ namespace Kaufmann_Final.Controllers
                 }
             }
 
-            if (userAccount == null)
+            if (userAccount is null)
             {
                 return Unauthorized();
             }
