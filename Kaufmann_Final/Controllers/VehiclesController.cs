@@ -20,7 +20,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddNewVehicle(NewVehicleModel vehicle)
+        public async Task<ActionResult> AddNewVehicle([FromBody] NewVehicleModel vehicle)
         {
             List<VehicleOwner> newOwner = new List<VehicleOwner>(vehicle.DriverLicenseNumbers.Count);
            

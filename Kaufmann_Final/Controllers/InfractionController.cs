@@ -23,9 +23,11 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DriverInfraction infraction)
         {
-            var driverOwner = _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlatenumber).FirstOrDefault();
+            int vehicleOwnerID = _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlatenumber)
+                                                         .Select(vo => vo.VehicleOwnerId)
+                                                         .FirstOrDefault();
 
-            if (driverOwner == null)
+            if (vehicleOwnerID == 0)
             {
                 return NotFound();
             }
@@ -33,7 +35,7 @@ namespace Kaufmann_Final.Controllers
             Infraction driverInfraction = new Infraction
             {
                 InfractionDate = infraction.InfractionDate,
-                VehicleOwnerId = driverOwner.VehicleOwnerId,
+                VehicleOwnerId = vehicleOwnerID,
                 Offence = infraction.Offence,
                 FineAmount = infraction.FineAmount,
             };
@@ -49,7 +51,7 @@ namespace Kaufmann_Final.Controllers
                 return Conflict();
             }
 
-            return Created("getinfraction", $"Infraction was successfully added");
+            return Created("getinfraction", $"Infraction for {infraction.DriverLicenseNumber} was successfully added");
         }
     }
 
@@ -59,7 +61,6 @@ namespace Kaufmann_Final.Controllers
         public string LicensePlatenumber { get; set; }
         public string Offence { get; set; }
         public DateTime InfractionDate { get; set; }
-
         public decimal FineAmount { get; set; }
     }
 

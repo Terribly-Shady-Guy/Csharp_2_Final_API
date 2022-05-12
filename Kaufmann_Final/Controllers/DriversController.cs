@@ -1,5 +1,4 @@
-﻿#nullable disable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,38 +24,22 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Driver>> GetDriver(string firstName = "", string lastName = "", string licensePlate = "", string ssn = "")
+        public ActionResult<Driver> GetDriver([FromBody] DriverLookupModel driver)
         {
-            var drivers = new List<Driver>();
+            Driver? foundDriver = _context.Drivers.Where(d => (d.FirstName == driver.FirstName && d.LastName == driver.LastName) && d.VehicleOwners.Any(vo => vo.LicensePlateNumber == driver.LicensePlate) && d.SocialSecurity == driver.SSN)
+                                                  .FirstOrDefault();
 
-            if (firstName != "" && lastName != "")
-            {
-                drivers = _context.Drivers.Where(d => d.FirstName == firstName && d.LastName == lastName).ToList();
-            }
-            else if (licensePlate != "")
-            {
-                drivers = _context.Drivers.Where(d => d.VehicleOwners.Any(vo => vo.LicensePlateNumber == licensePlate)).ToList();
-            }
-            else if (ssn != "")
-            {
-                drivers = _context.Drivers.Where(d => d.SocialSecurity == ssn).ToList();
-            }
-            else
-            {
-                return BadRequest();
-            }
-
-            if (drivers.Count == 0)
+            if (foundDriver is null)
             {
                 return NotFound();
             }
 
-            return Ok(drivers);
+            return Ok(foundDriver);
         }
 
         [Authorize(Roles = "DMV Staff")]
         [HttpPost]
-        public async Task<ActionResult> AddNewDriver(NewDriver driver)
+        public async Task<ActionResult> AddNewDriver([FromBody] NewDriver driver)
         {
             Driver newDriver = new Driver
             {
@@ -89,5 +72,13 @@ namespace Kaufmann_Final.Controllers
         public string LastName { get; set; }
         public string SocialSecurity { get; set; }
         public DateTime DateOfBirth { get; set; }
+    }
+
+    public class DriverLookupModel
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string LicensePlate { get; set; }
+        public string SSN { get; set; }
     }
 }

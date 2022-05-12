@@ -21,7 +21,7 @@ namespace Kaufmann_Final.Controllers
 
         [Route("/signup")]
         [HttpPost]
-        public async Task<ActionResult> CreateUser(User newUser)
+        public async Task<ActionResult> CreateUser([FromBody] User newUser)
         {
             _dbContext.Users.Add(newUser);
 
@@ -39,7 +39,7 @@ namespace Kaufmann_Final.Controllers
 
         [Route("/login")]
         [HttpPost]
-        public ActionResult<string> Login(UserLogin user)
+        public ActionResult<string> Login([FromBody] UserLogin user)
         {
             List<User> userList = _dbContext.Users.Where(u => u.Username == user.Username).ToList();
 
