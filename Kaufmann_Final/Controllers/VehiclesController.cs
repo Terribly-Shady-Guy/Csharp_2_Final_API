@@ -22,16 +22,16 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewVehicle([FromBody] NewVehicleModel vehicle)
         {
-            List<VehicleOwner> newOwner = new List<VehicleOwner>(vehicle.DriverLicenseNumbers.Count);
+            List<VehicleOwner> newOwners = new List<VehicleOwner>(vehicle.DriverLicenseNumbers.Count);
            
-            for (int i = 0; i < newOwner.Count; i++)
+            for (int i = 0; i < vehicle.DriverLicenseNumbers.Count; i++)
             {
-                newOwner[i] = new VehicleOwner
+                newOwners.Add(new VehicleOwner
                 {
                     DriverLicenseNumber = vehicle.DriverLicenseNumbers[i],
                     LicensePlateNumber = vehicle.LicensePlateNumber,
                     TitleDateIssued = vehicle.TitleDateIssued
-                };
+                });
             }
 
             Vehicle newVehicle = new Vehicle
@@ -39,10 +39,14 @@ namespace Kaufmann_Final.Controllers
                 LicensePlateNumber = vehicle.LicensePlateNumber,
                 Model = vehicle.Model,
                 Make = vehicle.Make,
-                Year = vehicle.Year,
-                VehicleOwners = newOwner,
+                Year = vehicle.Year
             };
 
+            foreach (var owner in newOwners)
+            {
+                newVehicle.VehicleOwners.Add(owner);
+            }
+            
             _context.Vehicles.Add(newVehicle);
 
             try
@@ -52,6 +56,10 @@ namespace Kaufmann_Final.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 return Conflict();
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest();
             }
 
             return Created("getVehicles", $"Vehicle successfully inserted as {newVehicle.LicensePlateNumber}");

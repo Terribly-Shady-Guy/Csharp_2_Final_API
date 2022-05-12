@@ -24,7 +24,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public ActionResult<Driver> GetDriver([FromBody] DriverLookupModel driver)
+        public ActionResult GetDriver([FromBody] DriverLookupModel driver)
         {
             Driver? foundDriver = _context.Drivers.Where(d => (d.FirstName == driver.FirstName && d.LastName == driver.LastName) && d.VehicleOwners.Any(vo => vo.LicensePlateNumber == driver.LicensePlate) && d.SocialSecurity == driver.SSN)
                                                   .FirstOrDefault();
@@ -34,7 +34,15 @@ namespace Kaufmann_Final.Controllers
                 return NotFound();
             }
 
-            return Ok(foundDriver);
+            var vehicles = _context.Vehicles.Where(v => v.LicensePlateNumber == driver.LicensePlate)
+                                            .ToList();
+
+            var infractions = _context.Infractions.Where(i => i.VehicleOwner.DriverLicenseNumber == foundDriver.DriverLicenseNumber && i.VehicleOwner.LicensePlateNumber == driver.LicensePlate).ToList();
+
+            var driverDetails = new { Driver = foundDriver, Vehicle = vehicles, Infractions = infractions };
+
+
+            return Ok(driverDetails);
         }
 
         [Authorize(Roles = "DMV Staff")]
@@ -59,6 +67,10 @@ namespace Kaufmann_Final.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 return Conflict();
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest();
             }
 
             return Created("getDriver", $"New driver {newDriver.FirstName} {newDriver.LastName} added");

@@ -33,6 +33,10 @@ namespace Kaufmann_Final.Controllers
             {
                 return Conflict();
             }
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
 
             return Created("GetUsers", $"New account created as: {newUser.Username}");
         }

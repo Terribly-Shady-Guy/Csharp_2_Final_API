@@ -23,7 +23,7 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] DriverInfraction infraction)
         {
-            int vehicleOwnerID = _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlatenumber)
+            int vehicleOwnerID = _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlateNumber)
                                                          .Select(vo => vo.VehicleOwnerId)
                                                          .FirstOrDefault();
 
@@ -50,6 +50,10 @@ namespace Kaufmann_Final.Controllers
             {
                 return Conflict();
             }
+            catch (DbUpdateException)
+            {
+                return BadRequest();
+            }
 
             return Created("getinfraction", $"Infraction for {infraction.DriverLicenseNumber} was successfully added");
         }
@@ -58,7 +62,7 @@ namespace Kaufmann_Final.Controllers
     public class DriverInfraction
     {
         public string DriverLicenseNumber { get; set; }
-        public string LicensePlatenumber { get; set; }
+        public string LicensePlateNumber { get; set; }
         public string Offence { get; set; }
         public DateTime InfractionDate { get; set; }
         public decimal FineAmount { get; set; }
