@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Kaufmann_Final.Data;
@@ -24,25 +19,20 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetDriver([FromBody] DriverLookupModel driver)
+        public async Task<ActionResult> GetDriver([FromBody] DriverLookupModel driver)
         {
-            Driver? foundDriver = _context.Drivers.Where(d => (d.FirstName == driver.FirstName && d.LastName == driver.LastName) && d.VehicleOwners.Any(vo => vo.LicensePlateNumber == driver.LicensePlate) && d.SocialSecurity == driver.SSN)
-                                                  .FirstOrDefault();
+            Driver? foundDriver = await _context.Drivers.Where(d => d.FirstName == driver.FirstName && d.LastName == driver.LastName && d.SocialSecurity == driver.SSN)
+                                                        .Include(d => d.VehicleOwners.Where(vo => vo.LicensePlateNumber == driver.LicensePlate))
+                                                        .ThenInclude(vo => vo.Infractions)
+                                                        .FirstOrDefaultAsync();
 
             if (foundDriver is null)
             {
                 return NotFound();
             }
 
-            var vehicles = _context.Vehicles.Where(v => v.LicensePlateNumber == driver.LicensePlate)
-                                            .ToList();
 
-            var infractions = _context.Infractions.Where(i => i.VehicleOwner.DriverLicenseNumber == foundDriver.DriverLicenseNumber && i.VehicleOwner.LicensePlateNumber == driver.LicensePlate).ToList();
-
-            var driverDetails = new { Driver = foundDriver, Vehicle = vehicles, Infractions = infractions };
-
-
-            return Ok(driverDetails);
+            return Ok(foundDriver);
         }
 
         [Authorize(Roles = "DMV Staff")]

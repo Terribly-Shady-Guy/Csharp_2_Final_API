@@ -25,7 +25,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 SSN = "123-45-6789"
             };
 
-            var data = controller.GetDriver(mockData);
+            var data = controller.GetDriver(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(OkObjectResult));
         }
@@ -42,7 +42,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 SSN = "123-45-6789"
             };
 
-            var data = controller.GetDriver(mockData);
+            var data = controller.GetDriver(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(NotFoundResult));
         }

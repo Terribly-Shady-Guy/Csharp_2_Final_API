@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Kaufmann_Final.Data;
@@ -22,18 +21,6 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewVehicle([FromBody] NewVehicleModel vehicle)
         {
-            List<VehicleOwner> newOwners = new List<VehicleOwner>(vehicle.DriverLicenseNumbers.Count);
-           
-            for (int i = 0; i < vehicle.DriverLicenseNumbers.Count; i++)
-            {
-                newOwners.Add(new VehicleOwner
-                {
-                    DriverLicenseNumber = vehicle.DriverLicenseNumbers[i],
-                    LicensePlateNumber = vehicle.LicensePlateNumber,
-                    TitleDateIssued = vehicle.TitleDateIssued
-                });
-            }
-
             Vehicle newVehicle = new Vehicle
             {
                 LicensePlateNumber = vehicle.LicensePlateNumber,
@@ -42,9 +29,14 @@ namespace Kaufmann_Final.Controllers
                 Year = vehicle.Year
             };
 
-            foreach (var owner in newOwners)
+            for (int i = 0; i < vehicle.LicensePlateNumber.Length; i++)
             {
-                newVehicle.VehicleOwners.Add(owner);
+                newVehicle.VehicleOwners.Add(new VehicleOwner
+                {
+                    DriverLicenseNumber = vehicle.DriverLicenseNumbers[i],
+                    LicensePlateNumber = vehicle.LicensePlateNumber,
+                    TitleDateIssued = vehicle.TitleDateIssued
+                });
             }
             
             _context.Vehicles.Add(newVehicle);

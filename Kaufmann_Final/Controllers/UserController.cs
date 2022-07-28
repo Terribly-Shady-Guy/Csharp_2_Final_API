@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Kaufmann_Final.Models;
 using Kaufmann_Final.Data;
@@ -43,9 +42,9 @@ namespace Kaufmann_Final.Controllers
 
         [Route("/login")]
         [HttpPost]
-        public ActionResult<string> Login([FromBody] UserLogin user)
+        public async Task<ActionResult<string>> Login([FromBody] UserLogin user)
         {
-            List<User> userList = _dbContext.Users.Where(u => u.Username == user.Username).ToList();
+            List<User> userList = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
             User? userAccount = null;
 
@@ -63,7 +62,7 @@ namespace Kaufmann_Final.Controllers
                 return Unauthorized();
             }
 
-            string token = _manager.AuthenticateUser(userAccount);
+            string token = _manager.CreateJWT(userAccount);
 
             return Ok(token);
         }

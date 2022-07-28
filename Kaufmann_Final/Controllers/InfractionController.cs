@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Kaufmann_Final.Data;
@@ -10,7 +9,6 @@ namespace Kaufmann_Final.Controllers
     [Authorize(Roles = "Law Enforcement")]
     [Route("api/[controller]")]
     [ApiController]
-
     public class InfractionController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
@@ -23,9 +21,9 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<IActionResult> AddInfraction([FromBody] DriverInfraction infraction)
         {
-            int vehicleOwnerID = _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlateNumber)
-                                                         .Select(vo => vo.VehicleOwnerId)
-                                                         .FirstOrDefault();
+            int vehicleOwnerID = await _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlateNumber)
+                                                               .Select(vo => vo.VehicleOwnerId)
+                                                               .FirstOrDefaultAsync();
 
             if (vehicleOwnerID == 0)
             {

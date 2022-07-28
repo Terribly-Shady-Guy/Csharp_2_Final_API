@@ -8,20 +8,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Configure JWT Authentecation.
-string key = "SuperSecretKey123";
-
 builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(option =>
 {
+    string key = builder.Configuration["JWT:Key"];
+
     option.RequireHttpsMetadata = false;
     option.SaveToken = true;
     option.TokenValidationParameters = new TokenValidationParameters
@@ -33,7 +37,7 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
-builder.Services.AddSingleton(new AuthenticationManager(key));
+builder.Services.AddSingleton(new AuthenticationManager(builder.Configuration["JWT:Key"]));
 
 //configure EF core to access SQL Server db.
 builder.Services.AddDbContext<Kaufmann_Final.Data.Kaufmann_FinaldbContext>(

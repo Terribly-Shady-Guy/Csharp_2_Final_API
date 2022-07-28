@@ -15,7 +15,7 @@ namespace Kaufmann_Final
             _key = key;
         }
 
-        public string AuthenticateUser(User user)
+        public string CreateJWT(User user)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(_key);
