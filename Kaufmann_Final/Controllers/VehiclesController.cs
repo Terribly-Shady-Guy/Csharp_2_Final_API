@@ -29,11 +29,11 @@ namespace Kaufmann_Final.Controllers
                 Year = vehicle.Year
             };
 
-            for (int i = 0; i < vehicle.LicensePlateNumber.Length; i++)
+            foreach (string driverLicenseNumber in vehicle.DriverLicenseNumbers)
             {
                 newVehicle.VehicleOwners.Add(new VehicleOwner
                 {
-                    DriverLicenseNumber = vehicle.DriverLicenseNumbers[i],
+                    DriverLicenseNumber = driverLicenseNumber,
                     LicensePlateNumber = vehicle.LicensePlateNumber,
                     TitleDateIssued = vehicle.TitleDateIssued
                 });
