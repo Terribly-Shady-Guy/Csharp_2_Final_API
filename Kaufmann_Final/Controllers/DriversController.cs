@@ -7,7 +7,7 @@ using Kaufmann_Final.Models;
 namespace Kaufmann_Final.Controllers
 {
     [Authorize(Roles = "Law Enforcement, DMV Staff")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DriversController : ControllerBase
     {
@@ -19,10 +19,10 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetDriver([FromBody] DriverLookupModel driver)
+        public async Task<ActionResult> GetDriverByName([FromQuery] DriverNameDto driver)
         {
-            Driver? foundDriver = await _context.Drivers.Where(d => d.FirstName == driver.FirstName && d.LastName == driver.LastName && d.SocialSecurity == driver.SSN)
-                                                        .Include(d => d.VehicleOwners.Where(vo => vo.LicensePlateNumber == driver.LicensePlate))
+            Driver? foundDriver = await _context.Drivers.Where(d => d.FirstName == driver.FirstName && d.LastName == driver.LastName)
+                                                        .Include(d => d.VehicleOwners)
                                                         .ThenInclude(vo => vo.Infractions)
                                                         .FirstOrDefaultAsync();
 
@@ -35,9 +35,42 @@ namespace Kaufmann_Final.Controllers
             return Ok(foundDriver);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetDriverBySsn(string ssn)
+        {
+            Driver? foundDriver = await _context.Drivers.Where(d => d.SocialSecurity == ssn)
+                                                        .Include(d => d.VehicleOwners)
+                                                        .ThenInclude(vo => vo.Infractions)
+                                                        .FirstOrDefaultAsync();
+
+            if (foundDriver is null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(foundDriver);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetDriversByLicensePlate(string licensePlateNumber)
+        {
+            List<Vehicle> foundDrivers = await _context.Vehicles.Where(v => v.LicensePlateNumber == licensePlateNumber)
+                                                                .Include(v => v.VehicleOwners)
+                                                                .ThenInclude(vo => vo.DriverLicenseNumberNavigation)
+                                                                .ToListAsync();
+
+            if (foundDrivers.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(foundDrivers);
+        }
+
         [Authorize(Roles = "DMV Staff")]
         [HttpPost]
-        public async Task<ActionResult> AddNewDriver([FromBody] NewDriver driver)
+        public async Task<ActionResult> AddNewDriver([FromBody] DriverDto driver)
         {
             Driver newDriver = new Driver
             {
@@ -65,22 +98,5 @@ namespace Kaufmann_Final.Controllers
 
             return Created("getDriver", $"New driver {newDriver.FirstName} {newDriver.LastName} added");
         }
-    }
-
-    public class NewDriver
-    {
-        public string DriverLicenseNumber { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string SocialSecurity { get; set; }
-        public DateTime DateOfBirth { get; set; }
-    }
-
-    public class DriverLookupModel
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string LicensePlate { get; set; }
-        public string SSN { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Kaufmann_FinalTests;
+using Kaufmann_Final.Models;
 
 namespace Kaufmann_Final.Controllers.Tests
 {
@@ -17,15 +18,13 @@ namespace Kaufmann_Final.Controllers.Tests
         public void GetDriverGoodDataTest()
         {
             var controller = new DriversController(TestDBContextCreator.CreateTestContext());
-            var mockData = new DriverLookupModel
+            var mockData = new DriverNameDto
             {
                 FirstName = "John",
                 LastName = "Doe",
-                LicensePlate = "ABC123",
-                SSN = "123-45-6789"
             };
 
-            var data = controller.GetDriver(mockData).Result;
+            var data = controller.GetDriverByName(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(OkObjectResult));
         }
@@ -34,15 +33,13 @@ namespace Kaufmann_Final.Controllers.Tests
         public void GetDriverBadDataTest()
         {
             var controller = new DriversController(TestDBContextCreator.CreateTestContext());
-            var mockData = new DriverLookupModel
+            var mockData = new DriverNameDto
             {
                 FirstName = "Bad",
                 LastName = "Data",
-                LicensePlate = "ABC123",
-                SSN = "123-45-6789"
             };
 
-            var data = controller.GetDriver(mockData).Result;
+            var data = controller.GetDriverByName(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(NotFoundResult));
         }
@@ -51,7 +48,7 @@ namespace Kaufmann_Final.Controllers.Tests
         public void AddDriverWithDuplicateKeyTest()
         {
             var controller = new DriversController(TestDBContextCreator.CreateTestContext());
-            var mockData = new NewDriver
+            var mockData = new DriverDto
             {
                 DriverLicenseNumber = "M112233445566",
                 FirstName = "John",

@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddInfraction([FromBody] DriverInfraction infraction)
+        public async Task<IActionResult> AddInfraction([FromBody] InfractionDto infraction)
         {
             int vehicleOwnerID = await _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlateNumber)
                                                                .Select(vo => vo.VehicleOwnerId)
@@ -56,14 +56,4 @@ namespace Kaufmann_Final.Controllers
             return Created("getinfraction", $"Infraction for {infraction.DriverLicenseNumber} was successfully added");
         }
     }
-
-    public class DriverInfraction
-    {
-        public string DriverLicenseNumber { get; set; }
-        public string LicensePlateNumber { get; set; }
-        public string Offence { get; set; }
-        public DateTime InfractionDate { get; set; }
-        public decimal FineAmount { get; set; }
-    }
-
 }

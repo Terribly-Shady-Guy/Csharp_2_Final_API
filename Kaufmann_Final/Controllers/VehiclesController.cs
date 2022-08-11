@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddNewVehicle([FromBody] NewVehicleModel vehicle)
+        public async Task<ActionResult> AddNewVehicle([FromBody] VehicleDto vehicle)
         {
             Vehicle newVehicle = new Vehicle
             {
@@ -56,15 +56,5 @@ namespace Kaufmann_Final.Controllers
 
             return Created("getVehicles", $"Vehicle successfully inserted as {newVehicle.LicensePlateNumber}");
         }
-    }
-
-    public class NewVehicleModel
-    {
-        public string LicensePlateNumber { get; set; }
-        public List<string> DriverLicenseNumbers { get; set; }
-        public string Model { get; set; }
-        public string Make { get; set; }
-        public string Year { get; set; }
-        public DateTime TitleDateIssued { get; set; }
     }
 }

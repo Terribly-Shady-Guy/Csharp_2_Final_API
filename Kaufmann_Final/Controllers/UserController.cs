@@ -5,7 +5,7 @@ using Kaufmann_Final.Data;
 
 namespace Kaufmann_Final.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -18,7 +18,6 @@ namespace Kaufmann_Final.Controllers
             _manager = manager;
         }
 
-        [Route("/signup")]
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] User newUser)
         {
@@ -40,9 +39,8 @@ namespace Kaufmann_Final.Controllers
             return Created("GetUsers", $"New account created as: {newUser.Username}");
         }
 
-        [Route("/login")]
         [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody] UserLogin user)
+        public async Task<ActionResult<string>> Login([FromBody] LoginDto user)
         {
             List<User> userList = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
@@ -66,11 +64,5 @@ namespace Kaufmann_Final.Controllers
 
             return Ok(token);
         }
-    }
-
-    public class UserLogin
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }
