@@ -93,7 +93,7 @@ namespace Kaufmann_Final.Controllers
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return BadRequest("This driver's license number already exists");
             }
 
             return Created("getDriver", $"New driver {newDriver.FirstName} {newDriver.LastName} added");

@@ -38,7 +38,7 @@ namespace Kaufmann_Final.Controllers
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return BadRequest("This user already exists");
             }
 
             return Created("GetUsers", $"New account created as: {newUser.Username}");

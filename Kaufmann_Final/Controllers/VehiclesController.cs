@@ -51,7 +51,7 @@ namespace Kaufmann_Final.Controllers
             }
             catch (DbUpdateException)
             {
-                return BadRequest();
+                return BadRequest("This license plate number already exists");
             }
 
             return Created("getVehicles", $"Vehicle successfully inserted as {newVehicle.LicensePlateNumber}");
