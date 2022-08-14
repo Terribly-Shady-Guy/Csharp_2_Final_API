@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Kaufmann_Final.Models;
 using Kaufmann_Final.Data;
 
@@ -21,6 +22,10 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] User newUser)
         {
+            var hasher = new PasswordHasher<User>();
+
+            newUser.Password = hasher.HashPassword(newUser, newUser.Password);
+
             _dbContext.Users.Add(newUser);
 
             try
@@ -46,9 +51,12 @@ namespace Kaufmann_Final.Controllers
 
             User? userAccount = null;
 
+            var hasher = new PasswordHasher<User>();
+
             foreach (var possibleUser in userList)
             {
-                if (possibleUser.Password == user.Password)
+                var result = hasher.VerifyHashedPassword(possibleUser, possibleUser.Password, user.Password);
+                if (result == PasswordVerificationResult.Success)
                 {
                     userAccount = possibleUser;
                     break;
