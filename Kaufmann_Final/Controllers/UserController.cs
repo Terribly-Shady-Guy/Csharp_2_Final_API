@@ -11,9 +11,9 @@ namespace Kaufmann_Final.Controllers
     public class UserController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
-        private readonly AuthenticationManager _manager;
+        private readonly JWTManager _manager;
 
-        public UserController(Kaufmann_FinaldbContext context, AuthenticationManager manager)
+        public UserController(Kaufmann_FinaldbContext context, JWTManager manager)
         {
             _dbContext = context;
             _manager = manager;

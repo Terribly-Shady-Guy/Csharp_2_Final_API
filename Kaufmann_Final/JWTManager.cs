@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Kaufmann_Final
 {
-    public class AuthenticationManager
+    public class JWTManager
     {
         private readonly string _key;
 
-        public AuthenticationManager(string key)
+        public JWTManager(string key)
         {
             _key = key;
         }
