@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
             _manager = manager;
         }
 
-        [HttpPost]
+        [HttpPost(Name = "signup")]
         public async Task<ActionResult> CreateUser([FromBody] User newUser)
         {
             var hasher = new PasswordHasher<User>();
@@ -44,7 +44,7 @@ namespace Kaufmann_Final.Controllers
             return Created("GetUsers", $"New account created as: {newUser.Username}");
         }
 
-        [HttpPost]
+        [HttpPost(Name = "login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto user)
         {
             List<User> userList = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
@@ -70,7 +70,22 @@ namespace Kaufmann_Final.Controllers
 
             string token = _manager.CreateJWT(userAccount);
 
-            return Ok(token);
+            var options = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddMinutes(30)
+            };
+
+            Response.Cookies.Append("DMVLaw-Access-Token", token, options);
+
+            return Ok("User logged in");
+        }
+
+        [HttpDelete(Name = "logout")]
+        public ActionResult Logout()
+        {
+            Response.Cookies.Delete("DMVLaw-Access-Token");
+            return NoContent();
         }
     }
 }

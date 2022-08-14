@@ -22,7 +22,8 @@ builder.Services.AddAuthentication(option =>
 {
     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(option =>
+})
+.AddJwtBearer(option =>
 {
     string key = builder.Configuration["JWT:Key"];
 
@@ -34,6 +35,17 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
         ValidateIssuer = false,
         ValidateAudience = false
+    };
+    option.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            if (context.Request.Cookies.ContainsKey("DMVLaw-Access-Token"))
+            {
+                context.Token = context.Request.Cookies["DMVLaw-Access-Token"];
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
