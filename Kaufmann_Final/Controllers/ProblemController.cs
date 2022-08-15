@@ -25,7 +25,7 @@ namespace Kaufmann_Final.Controllers
                 else
                 {
                     int count = int.Parse(keyCount[keyValue.Key]);
-                    ++count;
+                    count++;
                     keyCount[keyValue.Key] = count.ToString();
                 }
             }
