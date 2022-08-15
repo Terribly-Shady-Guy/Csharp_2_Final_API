@@ -24,7 +24,6 @@ namespace Kaufmann_Final.Controllers
         public async Task<ActionResult> CreateUser([FromBody] User newUser)
         {
             var hasher = new PasswordHasher<User>();
-
             newUser.Password = hasher.HashPassword(newUser, newUser.Password);
 
             _dbContext.Users.Add(newUser);
@@ -51,7 +50,6 @@ namespace Kaufmann_Final.Controllers
             List<User> users = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
             var validator = new PasswordValidator();
-
             User? userAccount = validator.ValidatePassword(users, user);
 
             if (userAccount is null)
