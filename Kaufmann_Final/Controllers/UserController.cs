@@ -50,7 +50,7 @@ namespace Kaufmann_Final.Controllers
         {
             List<User> users = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
-            PasswordValidator validator = new();
+            var validator = new PasswordValidator();
 
             User? userAccount = validator.ValidatePassword(users, user);
 
