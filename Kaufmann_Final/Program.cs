@@ -36,6 +36,7 @@ builder.Services.AddAuthentication(option =>
         ValidateIssuer = false,
         ValidateAudience = false
     };
+
     option.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
