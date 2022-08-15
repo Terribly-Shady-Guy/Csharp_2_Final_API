@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Kaufmann_Final.Models;
 using System.Text;
 
-namespace Kaufmann_Final
+namespace Kaufmann_Final.Services
 {
     public class JWTManager
     {

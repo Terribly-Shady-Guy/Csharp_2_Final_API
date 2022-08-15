@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Kaufmann_Final.Models;
 using Kaufmann_Final.Data;
+using Kaufmann_Final.Services;
 
 namespace Kaufmann_Final.Controllers
 {
@@ -47,21 +48,11 @@ namespace Kaufmann_Final.Controllers
         [HttpPost(Name = "login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto user)
         {
-            List<User> userList = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
+            List<User> users = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
-            User? userAccount = null;
+            PasswordValidator validator = new();
 
-            var hasher = new PasswordHasher<User>();
-
-            foreach (var possibleUser in userList)
-            {
-                var result = hasher.VerifyHashedPassword(possibleUser, possibleUser.Password, user.Password);
-                if (result == PasswordVerificationResult.Success)
-                {
-                    userAccount = possibleUser;
-                    break;
-                }
-            }
+            User? userAccount = validator.ValidatePassword(users, user);
 
             if (userAccount is null)
             {
@@ -73,7 +64,10 @@ namespace Kaufmann_Final.Controllers
             var options = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                SameSite = SameSiteMode.Strict,
+                IsEssential = true,
+                Secure = true
             };
 
             Response.Cookies.Append("DMVLaw-Access-Token", token, options);
