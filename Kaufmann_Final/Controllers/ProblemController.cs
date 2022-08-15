@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Kaufmann_Final.Controllers
 {
@@ -31,13 +30,11 @@ namespace Kaufmann_Final.Controllers
                 }
             }
 
-            var dictionaries = new List<Dictionary<string, string>>
+            return new List<Dictionary<string, string>>
             {
                 keyValues,
                 keyCount
             };
-
-            return dictionaries;
         }
     }
 }
