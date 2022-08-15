@@ -78,6 +78,11 @@ namespace Kaufmann_Final.Controllers
         [HttpDelete(Name = "logout")]
         public ActionResult Logout()
         {
+            if (!Request.Cookies.ContainsKey("DMVLaw-Access-Token"))
+            {
+                return BadRequest("User is not logged in");
+            }
+
             Response.Cookies.Delete("DMVLaw-Access-Token");
             return NoContent();
         }
