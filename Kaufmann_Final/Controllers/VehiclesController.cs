@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using Kaufmann_Final.Data;
+﻿using Kaufmann_Final.Data;
 using Kaufmann_Final.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kaufmann_Final.Controllers
 {
@@ -38,7 +38,7 @@ namespace Kaufmann_Final.Controllers
                     TitleDateIssued = vehicle.TitleDateIssued
                 });
             }
-            
+
             _context.Vehicles.Add(newVehicle);
 
             try

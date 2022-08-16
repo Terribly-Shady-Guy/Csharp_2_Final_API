@@ -1,7 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Kaufmann_Final.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Kaufmann_Final.Models;
 using System.Text;
 
 namespace Kaufmann_Final.Services

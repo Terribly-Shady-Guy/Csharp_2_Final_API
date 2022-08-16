@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Kaufmann_Final.Models;
+﻿using Kaufmann_Final.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kaufmann_Final.Services
 {

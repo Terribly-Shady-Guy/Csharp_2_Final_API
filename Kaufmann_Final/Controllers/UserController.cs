@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+﻿using Kaufmann_Final.Data;
 using Kaufmann_Final.Models;
-using Kaufmann_Final.Data;
 using Kaufmann_Final.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kaufmann_Final.Controllers
 {
