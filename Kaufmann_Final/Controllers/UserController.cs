@@ -59,30 +59,7 @@ namespace Kaufmann_Final.Controllers
 
             string token = _manager.CreateJWT(userAccount);
 
-            var options = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SameSite = SameSiteMode.Strict,
-                IsEssential = true,
-                Secure = true
-            };
-
-            Response.Cookies.Append("DMVLaw-Access-Token", token, options);
-
-            return Ok("User logged in");
-        }
-
-        [HttpDelete(Name = "logout")]
-        public ActionResult Logout()
-        {
-            if (!Request.Cookies.ContainsKey("DMVLaw-Access-Token"))
-            {
-                return BadRequest("User is not logged in");
-            }
-
-            Response.Cookies.Delete("DMVLaw-Access-Token");
-            return NoContent();
+            return Ok(token);
         }
     }
 }

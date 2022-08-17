@@ -36,18 +36,6 @@ builder.Services.AddAuthentication(option =>
         ValidateIssuer = false,
         ValidateAudience = false
     };
-
-    option.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            if (context.Request.Cookies.ContainsKey("DMVLaw-Access-Token"))
-            {
-                context.Token = context.Request.Cookies["DMVLaw-Access-Token"];
-            }
-            return Task.CompletedTask;
-        }
-    };
 });
 
 builder.Services.AddSingleton(new JWTManager(builder.Configuration["JWT:Key"]));
