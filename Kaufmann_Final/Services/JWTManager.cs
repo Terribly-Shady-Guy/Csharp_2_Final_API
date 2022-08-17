@@ -18,7 +18,7 @@ namespace Kaufmann_Final.Services
         public string CreateJWT(User user)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.ASCII.GetBytes(_key);
+            byte[] tokenKey = Encoding.ASCII.GetBytes(_key);
 
             var tokenDescripter = new SecurityTokenDescriptor
             {
@@ -33,7 +33,7 @@ namespace Kaufmann_Final.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var token = jwtHandler.CreateToken(tokenDescripter);
+            SecurityToken token = jwtHandler.CreateToken(tokenDescripter);
 
             return jwtHandler.WriteToken(token);
         }
