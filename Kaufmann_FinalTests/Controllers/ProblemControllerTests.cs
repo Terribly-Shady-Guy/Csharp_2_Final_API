@@ -27,7 +27,7 @@ namespace Kaufmann_Final.Controllers.Tests
         {
             var controller = new ProblemController();
 
-            var dictionaries = controller.AddToDictionaries(_testKeyValues);
+            var dictionaries = controller.SolveProblem(_testKeyValues);
 
             string expected = "2";
             string result = dictionaries[1]["doge"];
@@ -40,7 +40,7 @@ namespace Kaufmann_Final.Controllers.Tests
         {
             var controller = new ProblemController();
 
-            var dictionaries = controller.AddToDictionaries(_testKeyValues);
+            var dictionaries = controller.SolveProblem(_testKeyValues);
 
             string expected = "3";
             string result = dictionaries[1]["abc"];

@@ -7,7 +7,7 @@ namespace Kaufmann_Final.Controllers
     public class ProblemController : ControllerBase
     {
         [HttpPost] //solution to problem solving portion
-        public List<Dictionary<string, string>> AddToDictionaries(List<KeyValuePair<string, string>> keyValuePairs)
+        public List<Dictionary<string, string>> SolveProblem(List<KeyValuePair<string, string>> keyValuePairs)
         {
             var keyValues = new Dictionary<string, string>(keyValuePairs.Count);
             var keyCount = new Dictionary<string, string>(keyValuePairs.Count / 2);
