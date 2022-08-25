@@ -30,7 +30,7 @@ namespace Kaufmann_Final.Controllers
                 return NotFound();
             }
 
-            Infraction driverInfraction = new Infraction
+            var driverInfraction = new Infraction
             {
                 InfractionDate = infraction.InfractionDate,
                 VehicleOwnerId = vehicleOwnerID,

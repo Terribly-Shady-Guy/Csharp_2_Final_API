@@ -72,7 +72,7 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewDriver([FromBody] DriverDto driver)
         {
-            Driver newDriver = new Driver
+            var newDriver = new Driver
             {
                 DriverLicenseNumber = driver.DriverLicenseNumber,
                 FirstName = driver.FirstName,

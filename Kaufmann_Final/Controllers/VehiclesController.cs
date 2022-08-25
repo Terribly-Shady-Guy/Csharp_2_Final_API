@@ -21,7 +21,7 @@ namespace Kaufmann_Final.Controllers
         [HttpPost]
         public async Task<ActionResult> AddNewVehicle([FromBody] VehicleDto vehicle)
         {
-            Vehicle newVehicle = new Vehicle
+            var newVehicle = new Vehicle
             {
                 LicensePlateNumber = vehicle.LicensePlateNumber,
                 Model = vehicle.Model,
