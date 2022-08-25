@@ -7,8 +7,6 @@ namespace Kaufmann_Final.Services
     {
         public User? ValidatePassword(List<User> users, LoginDto user)
         {
-            User? userAccount = null;
-
             var hasher = new PasswordHasher<User>();
 
             foreach (var possibleUser in users)
@@ -16,12 +14,11 @@ namespace Kaufmann_Final.Services
                 var result = hasher.VerifyHashedPassword(possibleUser, possibleUser.Password, user.Password);
                 if (result == PasswordVerificationResult.Success)
                 {
-                    userAccount = possibleUser;
-                    break;
+                    return possibleUser;
                 }
             }
 
-            return userAccount;
+            return null;
         }
     }
 }
