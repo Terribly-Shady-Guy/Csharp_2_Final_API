@@ -24,7 +24,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 LastName = "Doe",
             };
 
-            var data = controller.GetDriverByName(mockData).Result;
+            var data = controller.GetDriverByNameAsync(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(OkObjectResult));
         }
@@ -39,7 +39,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 LastName = "Data",
             };
 
-            var data = controller.GetDriverByName(mockData).Result;
+            var data = controller.GetDriverByNameAsunc(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(NotFoundResult));
         }
@@ -57,7 +57,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 DateOfBirth = DateTime.Parse("1996-05-25")
             };
 
-            var result = controller.AddNewDriver(mockData).Result;
+            var result = controller.AddNewDriverAsync(mockData).Result;
 
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }

@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddInfraction([FromBody] InfractionDto infraction)
+        public async Task<IActionResult> AddInfractionAsync([FromBody] InfractionDto infraction)
         {
             int vehicleOwnerID = await _dbContext.VehicleOwners.Where(vo => vo.DriverLicenseNumber == infraction.DriverLicenseNumber && vo.LicensePlateNumber == infraction.LicensePlateNumber)
                                                                .Select(vo => vo.VehicleOwnerId)

@@ -12,16 +12,16 @@ namespace Kaufmann_Final.Controllers
     public class UserController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
-        private readonly JWTManager _manager;
+        private readonly JwtManager _manager;
 
-        public UserController(Kaufmann_FinaldbContext context, JWTManager manager)
+        public UserController(Kaufmann_FinaldbContext context, JwtManager manager)
         {
             _dbContext = context;
             _manager = manager;
         }
 
         [HttpPost(Name = "signup")]
-        public async Task<ActionResult> CreateUser([FromBody] User newUser)
+        public async Task<ActionResult> CreateUserAsync([FromBody] User newUser)
         {
             var hasher = new PasswordHasher<User>();
             newUser.Password = hasher.HashPassword(newUser, newUser.Password);
@@ -45,7 +45,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost(Name = "login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDto user)
+        public async Task<ActionResult<string>> LoginAsync([FromBody] LoginDto user)
         {
             List<User> users = await _dbContext.Users.Where(u => u.Username == user.Username).ToListAsync();
 
@@ -57,7 +57,7 @@ namespace Kaufmann_Final.Controllers
                 return Unauthorized();
             }
 
-            string token = _manager.CreateJWT(userAccount);
+            string token = _manager.CreateJwt(userAccount);
 
             return Ok(token);
         }

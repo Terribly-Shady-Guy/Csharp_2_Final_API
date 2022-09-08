@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddNewVehicle([FromBody] VehicleDto vehicle)
+        public async Task<ActionResult> AddNewVehicleAsync([FromBody] VehicleDto vehicle)
         {
             var newVehicle = new Vehicle
             {

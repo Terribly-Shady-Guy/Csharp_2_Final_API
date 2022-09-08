@@ -6,16 +6,16 @@ using System.Text;
 
 namespace Kaufmann_Final.Services
 {
-    public class JWTManager
+    public class JwtManager
     {
         private readonly string _key;
 
-        public JWTManager(string key)
+        public JwtManager(string key)
         {
             _key = key;
         }
 
-        public string CreateJWT(User user)
+        public string CreateJwt(User user)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
             byte[] tokenKey = Encoding.ASCII.GetBytes(_key);

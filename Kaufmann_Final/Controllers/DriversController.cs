@@ -19,7 +19,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetDriverByName([FromQuery] DriverNameDto driver)
+        public async Task<ActionResult> GetDriverByNameAsync([FromQuery] DriverNameDto driver)
         {
             Driver? foundDriver = await _context.Drivers.Where(d => d.FirstName == driver.FirstName && d.LastName == driver.LastName)
                                                         .Include(d => d.VehicleOwners)
@@ -36,7 +36,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetDriverBySsn(string ssn)
+        public async Task<ActionResult> GetDriverBySsnAsync(string ssn)
         {
             Driver? foundDriver = await _context.Drivers.Where(d => d.SocialSecurity == ssn)
                                                         .Include(d => d.VehicleOwners)
@@ -53,7 +53,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetDriversByLicensePlate(string licensePlateNumber)
+        public async Task<ActionResult> GetDriversByLicensePlateAsync(string licensePlateNumber)
         {
             List<Vehicle> foundDrivers = await _context.Vehicles.Where(v => v.LicensePlateNumber == licensePlateNumber)
                                                                 .Include(v => v.VehicleOwners)
@@ -70,7 +70,7 @@ namespace Kaufmann_Final.Controllers
 
         [Authorize(Roles = "DMV Staff")]
         [HttpPost]
-        public async Task<ActionResult> AddNewDriver([FromBody] DriverDto driver)
+        public async Task<ActionResult> AddNewDriverAsync([FromBody] DriverDto driver)
         {
             var newDriver = new Driver
             {
