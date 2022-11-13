@@ -61,5 +61,33 @@ namespace Kaufmann_Final.Controllers
 
             return Ok(token);
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdatePasswordAsync(LoginDto user)
+        {
+            User? userData = await _dbContext.Users.Where(u => u.Username == user.Username).FirstOrDefaultAsync();
+
+            if (userData is null) 
+            {
+                return NotFound();
+            }
+
+            var hasher = new PasswordHasher<User>();
+            userData.Password = hasher.HashPassword(userData, user.Password);
+
+            _dbContext.Attach(userData);
+            _dbContext.Entry(userData).Property(u => u.Password).IsModified = true;
+
+            try
+            { 
+                await _dbContext.SaveChangesAsync(); 
+            }
+            catch (DbUpdateException) 
+            {
+                return BadRequest();
+            }
+
+            return Ok($"User {user.Username} password updated");
+        }
     }
 }
