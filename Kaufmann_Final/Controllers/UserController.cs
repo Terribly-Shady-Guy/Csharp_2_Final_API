@@ -69,7 +69,7 @@ namespace Kaufmann_Final.Controllers
 
             if (userData is null) 
             {
-                return NotFound();
+                return NotFound($"The user {user.Username} does not exist");
             }
 
             var hasher = new PasswordHasher<User>();
