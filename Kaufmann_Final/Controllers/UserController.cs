@@ -21,7 +21,7 @@ namespace Kaufmann_Final.Controllers
         }
 
         [HttpPost(Name = "signup")]
-        public async Task<ActionResult> CreateUserAsync([FromBody] User newUser)
+        public async Task<ActionResult> SignUpAsync([FromBody] User newUser)
         {
             var hasher = new PasswordHasher<User>();
             newUser.Password = hasher.HashPassword(newUser, newUser.Password);
