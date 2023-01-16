@@ -6,19 +6,19 @@ using System.Text;
 
 namespace Kaufmann_Final.Services
 {
-    public class JwtManager
+    public class JwtManager : IJwtManager
     {
-        private readonly string _key;
+        private readonly IConfiguration _configuration;
 
-        public JwtManager(string key)
+        public JwtManager(IConfiguration configuration)
         {
-            _key = key;
+            _configuration = configuration;
         }
 
         public string CreateJwt(User user)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
-            byte[] tokenKey = Encoding.ASCII.GetBytes(_key);
+            byte[] tokenKey = Encoding.ASCII.GetBytes(_configuration["JWT:Key"]);
 
             var tokenDescripter = new SecurityTokenDescriptor
             {

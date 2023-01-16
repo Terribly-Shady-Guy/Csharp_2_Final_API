@@ -12,9 +12,9 @@ namespace Kaufmann_Final.Controllers
     public class UserController : ControllerBase
     {
         private readonly Kaufmann_FinaldbContext _dbContext;
-        private readonly JwtManager _manager;
+        private readonly IJwtManager _manager;
 
-        public UserController(Kaufmann_FinaldbContext context, JwtManager manager)
+        public UserController(Kaufmann_FinaldbContext context, IJwtManager manager)
         {
             _dbContext = context;
             _manager = manager;

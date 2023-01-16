@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(option =>
     };
 });
 
-builder.Services.AddSingleton(new JwtManager(builder.Configuration["JWT:Key"]));
+builder.Services.AddSingleton<IJwtManager, JwtManager>();
 
 //configure EF core to access SQL Server db.
 builder.Services.AddDbContext<Kaufmann_Final.Data.Kaufmann_FinaldbContext>(
