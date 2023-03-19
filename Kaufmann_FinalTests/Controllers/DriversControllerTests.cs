@@ -39,7 +39,7 @@ namespace Kaufmann_Final.Controllers.Tests
                 LastName = "Data",
             };
 
-            var data = controller.GetDriverByNameAsunc(mockData).Result;
+            var data = controller.GetDriverByNameAsync(mockData).Result;
 
             Assert.IsInstanceOfType(data, typeof(NotFoundResult));
         }
